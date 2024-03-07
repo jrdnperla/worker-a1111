@@ -2,6 +2,7 @@
 # Reccomended to lock the version number to avoid unexpected changes.
 
 runpod==1.2.1
+pydantic<2
 
 opencv-python-headless
 pyngrok
