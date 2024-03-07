@@ -51,7 +51,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 COPY --from=download /repositories/ ${ROOT}/repositories/
 COPY dreamshaper_8.safetensors /model.safetensors
-ADD trimmed-embeddings.zip /embeddings
+ADD /embeddings /
 
 RUN mkdir ${ROOT}/interrogate && cp ${ROOT}/repositories/clip-interrogator/data/* ${ROOT}/interrogate
 RUN --mount=type=cache,target=/root/.cache/pip \
