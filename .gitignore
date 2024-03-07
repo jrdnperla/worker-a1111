@@ -162,3 +162,5 @@ embeddings/
 lora/
 models/
 notes.txt
+*.safetensors
+*.zip
