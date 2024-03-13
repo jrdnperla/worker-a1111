@@ -27,24 +27,21 @@ FROM python:3.10.9-slim
 
 ARG SHA=cf2772fab0af5573da775e7437e6acdca424f26e
 
-ARG MODEL
-
 ENV DEBIAN_FRONTEND=noninteractive \
     PIP_PREFER_BINARY=1 \
     LD_PRELOAD=libtcmalloc.so \
-    ROOT=/stable-diffusion-webui \  
+    ROOT=/stable-diffusion-webui \
     PYTHONUNBUFFERED=1
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update && \
     apt install -y \
-    fonts-dejavu-core rsync git jq moreutils aria2 wget libgoogle-perftools-dev \
-    procps && \
+    fonts-dejavu-core rsync git jq moreutils aria2 wget libgoogle-perftools-dev procps && \
     apt-get autoremove -y && rm -rf /var/lib/apt/lists/* && apt-get clean -y
 
-    RUN --mount=type=cache,target=/cache --mount=type=cache,target=/root/.cache/pip \
-        pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+RUN --mount=type=cache,target=/cache --mount=type=cache,target=/root/.cache/pip \
+    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
 RUN --mount=type=cache,target=/root/.cache/pip \
     git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && \
@@ -66,14 +63,14 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --upgrade -r /requirements.txt --no-cache-dir && \
     rm /requirements.txt
 
-COPY $MODEL /model.safetensors
+COPY Clarity_v3.safetensors /model.safetensors
 
 COPY builder/cache.py /stable-diffusion-webui/cache.py
 RUN cd /stable-diffusion-webui && python cache.py --use-cpu=all --ckpt /model.safetensors
 
 ADD src .
 
-ADD /addedfiles/ /
+ADD /embeddings /embeddings/
 
 # Cleanup section (Worker Template)
 RUN apt-get autoremove -y && \
