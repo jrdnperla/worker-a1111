@@ -1,16 +1,16 @@
-$modelfiles = gci *.safetensors
+param($Modelfile) 
 
 $tagbase = "jrdnperla/runpod_custom_worker_a1111:"
 
 $dockerfileV = "v1.1"
 
-foreach ($model in $modelfiles) {
+$model = gci $modelfile
 
-    $model.BaseName
     $tag = $tagbase + $model.BaseName + $dockerfileV
-    docker build . -t $tag
-    docker push $tag
-}
+    "Building $tag"
+    docker build . -t $tag --build-arg MODEL=$($model.Name)
+
+
 
 #docker builder prune
 
